@@ -16,12 +16,11 @@ class _CameraState extends State<Camera> {
   late CameraController controller;
   bool selfie = false;
   bool loading = false;
-  String apiServer = 'http://';
+  String apiServer = 'https://rotten-fruits-detector.onrender.com/predict';
 
   @override
   void initState() {
     super.initState();
-    _checkCameraPermission();
     _initializeCamera();
   }
 
@@ -32,8 +31,6 @@ class _CameraState extends State<Camera> {
   }
 
   // PRIVATE FUNCTIONS
-  void _checkCameraPermission() {}
-
   void _initializeCamera() async {
     List<CameraDescription> cameras = await availableCameras();
     controller =
@@ -111,10 +108,10 @@ class _CameraState extends State<Camera> {
 
   @override
   Widget build(BuildContext context) {
-    // Fill this out in the next steps.
     if (!controller.value.isInitialized) {
       return Container();
     }
+
     return Scaffold(
       body: Center(
         child: !controller.value.isInitialized
