@@ -10,7 +10,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var image;
+  var image = 'https://i.imgur.com/0Z0Z0Z0.png';
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pushNamed(context, Camera.routeName)
-            .then((value) => setState(() => image = value)),
+            .then((value) => setState(() => image = value.toString())),
         tooltip: 'Take a picture',
         child: const Icon(Icons.camera_alt),
       ), // This trailing comma makes auto-formatting nicer for build methods.

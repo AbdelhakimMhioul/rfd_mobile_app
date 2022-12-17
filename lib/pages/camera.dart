@@ -13,7 +13,14 @@ class Camera extends StatefulWidget {
 }
 
 class _CameraState extends State<Camera> {
-  late CameraController controller;
+  CameraController controller = CameraController(
+    const CameraDescription(
+      name: 'Camera',
+      lensDirection: CameraLensDirection.back,
+      sensorOrientation: 0,
+    ),
+    ResolutionPreset.max,
+  );
   bool selfie = false;
   bool loading = false;
   String apiServer = 'https://rotten-fruits-detector.onrender.com/predict';
