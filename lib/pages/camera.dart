@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
+import 'package:dio/dio.dart' as myDio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 class Camera extends StatefulWidget {
   const Camera({Key? key}) : super(key: key);
@@ -62,21 +62,28 @@ class _CameraState extends State<Camera> {
   Future<void> _uploadPhoto() async {
     setState(() => loading = true);
     final image = await controller.takePicture();
-    try {
-      MultipartRequest request = MultipartRequest(
-        'POST',
-        Uri.parse(apiServer),
-      );
-      request.headers['Content-Type'] = 'multipart/form-data';
-      request.fields['type'] = 'photo';
-      request.files.add(await MultipartFile.fromPath('file', image.path));
-      await request.send();
-      setState(() => loading = false);
+
+    final dio = myDio.Dio();
+    final response = await dio.post(
+      apiServer,
+      data: myDio.FormData.fromMap({
+        "image": await myDio.MultipartFile.fromFile(image.path),
+      }),
+      options: myDio.Options(
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = response.data;
       if (!mounted) return;
-      Navigator.pop(context);
-    } catch (e) {
-      // print(e);
+      Navigator.pop(context, {'message': responseData['class_name']});
+    } else {
+      throw Exception('Failed to load data');
     }
+
     setState(() => loading = false);
   }
 
@@ -92,23 +99,30 @@ class _CameraState extends State<Camera> {
     );
 
     if (result != null) {
-      try {
-        MultipartRequest request = MultipartRequest(
-          'POST',
-          Uri.parse(apiServer),
-        );
-        request.headers['Content-Type'] = 'multipart/form-data';
-        request.fields['type'] = 'photo';
-        request.files.add(
-          await MultipartFile.fromPath('file', result.files.first.path ?? ""),
-        );
-        await request.send();
-        setState(() => loading = false);
+      final dio = myDio.Dio();
+      final response = await dio.post(
+        apiServer,
+        data: myDio.FormData.fromMap({
+          "image": await myDio.MultipartFile.fromFile(
+            result.files.first.path!.toString(),
+          ),
+        }),
+        options: myDio.Options(
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = response.data;
         if (!mounted) return;
-        Navigator.pop(context);
-      } catch (e) {
-        // print(e);
+        Navigator.pop(context, {'message': responseData['class_name']});
+      } else {
+        throw Exception('Failed to load data');
       }
+    } else {
+      // User canceled the picker
     }
     setState(() => loading = false);
   }

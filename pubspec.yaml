@@ -38,6 +38,7 @@ dependencies:
   camera: ^0.10.0+4
   file_picker: ^5.2.3
   http: ^0.13.5
+  dio: ^4.0.6
 
 dev_dependencies:
   flutter_test:

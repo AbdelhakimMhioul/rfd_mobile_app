@@ -10,7 +10,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var image = 'https://i.imgur.com/0Z0Z0Z0.png';
+  var message = "Insert a picture of a fruit to detect if it is rotten or not.";
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,17 +29,11 @@ class _HomeState extends State<Home> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image(
-                image: NetworkImage(image),
-                width: 300,
-                height: 300,
-              ),
-              const SizedBox(height: 90),
-              const Text(
-                'Insert a picture of a fruit to detect if it is rotten or not.',
-                style: TextStyle(
+              Text(
+                message,
+                style: const TextStyle(
                   color: Colors.red,
-                  fontSize: 30,
+                  fontSize: 40,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
@@ -44,8 +43,17 @@ class _HomeState extends State<Home> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, Camera.routeName)
-            .then((value) => setState(() => image = value.toString())),
+        onPressed: () async {
+          var result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Camera(),
+            ),
+          );
+          if (result != null) {
+            setState(() => message = result['message']);
+          }
+        },
         tooltip: 'Take a picture',
         child: const Icon(Icons.camera_alt),
       ), // This trailing comma makes auto-formatting nicer for build methods.
