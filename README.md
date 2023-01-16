@@ -1,6 +1,6 @@
 # rfd_mobile_app
 
-A new Flutter project.
+A Rotten Fruits Detection using Deep Learning and Computer Vision written in Flutter.
 
 ## Getting Started
 
